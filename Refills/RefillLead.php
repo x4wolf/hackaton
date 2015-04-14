@@ -8,10 +8,12 @@ namespace WritingInstruments\Refills;
 
 use WritingInstruments\Exceptions\EmptyNebException;
 use WritingInstruments\Exceptions\EmptyRefillLeadException;
+use WritingInstruments\Exceptions\NebBrokenException;
 
 class RefillLead {
 
     const PULL_OUT_STEP = 500;
+    const MAX_UNBROKEN_NEB = 2500;
 
     /**
      * @var int $length
@@ -89,10 +91,15 @@ class RefillLead {
     /**
      * @param String $text
      * @throws EmptyNebException
+     * @throws NebBrokenException
      */
     public function write ($text)
     {
         $remain = $this->getNeb();
+        if ($remain > self::MAX_UNBROKEN_NEB) {
+            $this->setNeb(0);
+            throw new NebBrokenException();
+        }
         if ($remain > 0) {
             $strlen = strlen($text);
             if ($strlen <= $remain) {
