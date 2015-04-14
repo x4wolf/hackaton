@@ -99,8 +99,7 @@ class RefillLead {
         if ($remain > self::MAX_UNBROKEN_NEB) {
             $this->setNeb(0);
             throw new NebBrokenException();
-        }
-        if ($remain > 0) {
+        } elseif ($remain > 0) {
             $strlen = strlen($text);
             if ($strlen <= $remain) {
                 echo ($text);
